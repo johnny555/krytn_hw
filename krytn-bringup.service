@@ -1,0 +1,17 @@
+[Unit]
+Description=Krytn ROS2 Bringup Service
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStartPre=/usr/bin/docker pull ros2
+ExecStart=/usr/bin/bash /home/ubuntu/krytn_ws/start_docker.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

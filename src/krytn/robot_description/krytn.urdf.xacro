@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="krytn" encoding='UTF-8'>
+
+  <!-- Import and add robot components -->
+  <xacro:include filename="$(find magni_description)/urdf/magni.urdf.xacro" />
+  <xacro:include filename="$(find sensors)/realsense_d435/realsense.urdf.xacro" />
+  <xacro:include filename="$(find sensors)/lidar_2d/lidar_2d.urdf.xacro" />
+
+  <xacro:realsense world_link_name="base_link">
+    <origin xyz="0 0 0.3" rpy="0 0 0" />
+  </xacro:realsense>
+
+  <xacro:lidar_2d world_link_name="base_link">
+    <origin xyz="0 0 0.15" rpy="0 0 0" />
+  </xacro:lidar_2d>
+
+
+<!-- ROS 2 Control block -->
+  <ros2_control name="ubiquity_motor_ros2/MotorHardware" type="system">
+    <hardware>
+      <plugin>ubiquity_motor_ros2/MotorHardware</plugin>
+    </hardware>
+
+    <joint name="left_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="right_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </ros2_control>
+
+
+</robot>

@@ -1,0 +1,46 @@
+version: '3'
+services:
+  ros2:
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    image: ros2
+    user: ubuntu
+    group_add:
+      - dialout
+      - tty
+    volumes:
+      - ../:/workspace:cached
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    network_mode: host
+    environment:
+      - DISPLAY=:0
+      - WAYLAND_DISPLAY=wayland-0
+      - XDG_RUNTIME_DIR=/run/user/1000
+      - PULSE_SERVER
+    ports:
+      - 5000:5000
+    devices:
+      - /dev/ttyS0:/dev/ttyS0
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/i2c-1:/dev/i2c-1
+      - /dev/i2c-0:/dev/i2c-0
+      - /dev/input/js0:/dev/input/js0
+      - /dev/input/event5:/dev/input/event5
+      - /dev/media0:/dev/media0
+      - /dev/media1:/dev/media1
+      - /dev/video0:/dev/video0
+    # Add device cgroup rules
+    device_cgroup_rules:
+      # Serial ports (ttyS*, ttyUSB*)
+      - 'c 4:* rwm'    # ttyS devices
+      - 'c 188:* rwm'  # ttyUSB devices
+      # I2C devices
+      - 'c 89:* rwm'   # i2c devices
+    #  # Input devices
+      - 'c 13:* rwm'   # input devices
+      # You can add more device types as needed
+      # Media devices
+      - 'c 81:* rwm'   # video devices
+      - 'c 251:* rwm'  # media controller devices
+    command: /bin/sh -c "while sleep 1000; do :; done"

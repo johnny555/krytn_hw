@@ -1,0 +1,8 @@
+{
+    "name": "Krytn Dev",
+    "dockerComposeFile": [
+        "docker-compose.yaml"
+    ],
+    "service": "ros2",
+    "workspaceFolder": "/workspace/",
+}
