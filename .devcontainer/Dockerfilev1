@@ -32,6 +32,7 @@ COPY src/ src/
 
 RUN apt-get update \
     && rosdep install --from-paths src --ignore-src -y -r \
+    && apt install iproute2 -y \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -39,6 +40,7 @@ RUN echo "ubuntu:ubuntu" | chpasswd && echo "ubunt ALL=(ALL) NOPASSWD: ALL" >> /
 RUN echo "test2"
 RUN mkdir -p /home/ubuntu/krytn_ws/src
 COPY src/ /home/ubuntu/krytn_ws/src/
+COPY open_ports.sh /home/ubuntu/krytn_ws/open_ports.sh
 WORKDIR /home/ubuntu/krytn_ws
 
 RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && colcon build --symlink-install --merge-install"

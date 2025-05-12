@@ -24,6 +24,8 @@ def generate_launch_description():
                 'sllidar_a1_launch.py'
             ])
         ])
+        ,
+        launch_arguments=[('frame_id', 'lidar_2d_link')]
     )
 
     # Include the robot description launch file
@@ -68,7 +70,7 @@ def generate_launch_description():
         executable='joy_node',
         name='joy_node',
         parameters=[{
-            'device_id': 0,
+           # 'device_id': 0,
             'deadzone': 0.05,
             'autorepeat_rate': 20.0,
         }]
@@ -94,7 +96,7 @@ def generate_launch_description():
         executable="twist_stamper.py",
         remappings=[("/cmd_vel_in", "/cmd_vel_unstamped"),
                        ("/cmd_vel_out",  "/cmd_vel")],
-        parameters=[{"use_sim_time","True"}],
+        parameters=[{"use_sim_time","False"}],
         output="screen"
     )  
 
@@ -107,22 +109,20 @@ def generate_launch_description():
                          ]
     )
 
-    # Add Raspberry Pi Camera v2.1 node using camera_ros package
+  
+    oled = Node(
+            package='oled_display_node',
+            executable='oled_display_node_exec',
+            name='oled_display',
+            output='screen'
+        )
+
     camera_node = Node(
-        package='camera_ros',
-        executable='camera_node',
-        name='pi_camera',
-        parameters=[{
-            'device': '/dev/media0',           # Device path for the camera
-            'frame_id': 'camera_link',         # Frame ID for tf
-            'width': 640,                      # Resolution width
-            'height': 480,                     # Resolution height
-            'fps': 30.0,                       # Frame rate
-            'camera_info_url': '',             # Leave empty if not calibrated
-            'exposure_mode': 'auto',           # Auto exposure
-            'white_balance_mode': 'auto',      # Auto white balance
-        }],
-        output='screen'
+        package='image_publisher',
+        executable='image_publisher_node',
+        name='camera_node',
+        output='screen',
+        arguments=['rtsp://localhost:8553/cam']
     )
 
     return LaunchDescription([
@@ -135,5 +135,6 @@ def generate_launch_description():
         twist_stamper,
         teleop_node,  # Add the teleop node
         camera_node,  # Add the camera node
-        slam_toolbox
+        slam_toolbox,
+        oled
     ])

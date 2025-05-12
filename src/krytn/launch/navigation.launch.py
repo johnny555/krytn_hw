@@ -16,10 +16,6 @@ def generate_launch_description():
 
     base_path = get_package_share_directory("krytn")
 
-    # We will include everything from the mapping launch file, making sure that sensors are now enabled and setting up RVIZ for navigation.
-    gazebo_and_mapping = IncludeLaunchDescription(join(base_path, "launch","mapping.launch.py"),
-                                      launch_arguments=[ ("rviz_config","nav.rviz")])
-
     # Nav2 bringup for navigation
     navigation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(join(get_package_share_directory('nav2_bringup'), 'launch','navigation_launch.py')),
@@ -39,7 +35,7 @@ def generate_launch_description():
         package="twist_stamper",
         executable="twist_stamper.py",
         remappings=[("/cmd_vel_in", "/cmd_vel_nav"),
-                       ("/cmd_vel_out",  "/diff_drive_base_controller/cmd_vel")],
+                       ("/cmd_vel_out",  "/cmd_vel")],
         parameters=[{"use_sim_time","True"}],
         output="screen",
         name="twist_stamper_nav"
@@ -47,5 +43,5 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        gazebo_and_mapping, nav_remapped, twist_stamper
+         nav_remapped, twist_stamper
     ])

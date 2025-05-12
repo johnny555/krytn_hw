@@ -1,31 +1,6 @@
 #!/bin/bash
-/usr/bin/docker run --rm --network=host \
-    -v /home/ubuntu/krytn_ws:/workspace \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -e DISPLAY=:0 \
-    -e WAYLAND_DISPLAY=wayland-0 \
-    -e XDG_RUNTIME_DIR=/run/user/1000 \
-    -e PULSE_SERVER=${PULSE_SERVER} \
-    --group-add dialout \
-    --device /dev/ttyS0:/dev/ttyS0 \
-    --device /dev/ttyUSB0:/dev/ttyUSB0 \
-    --device /dev/i2c-1:/dev/i2c-1 \
-    --device /dev/i2c-0:/dev/i2c-0 \
-    --device /dev/input/js0:/dev/input/js0 \
-    --device /dev/input/event0:/dev/input/event0 \
-    --device /dev/input/event1:/dev/input/event1 \
-    --device /dev/input/event2:/dev/input/event2 \
-    --device /dev/input/event3:/dev/input/event3 \
-    --device /dev/input/event4:/dev/input/event4 \
-    --device /dev/input/event5:/dev/input/event5 \
-    --device /dev/media0:/dev/media0 \
-    --device /dev/media1:/dev/media1 \
-    --device /dev/video0:/dev/video0 \
-    --device-cgroup-rule="c 4:* rwm" \
-    --device-cgroup-rule="c 188:* rwm" \
-    --device-cgroup-rule="c 89:* rwm" \
-    --device-cgroup-rule="c 13:* rwm" \
-    --device-cgroup-rule="c 81:* rwm" \
-    --device-cgroup-rule="c 251:* rwm" \
-    --privileged \
-     ros2 /bin/bash  /bringup.sh
+bash /home/krytn/krytn_ws/open_ports.sh
+#/usr/bin/docker run --rm -d --network=host --privileged --tmpfs /dev/shm:exec -v /run/udev:/run/udev:ro -e MTX_PATHS_CAM_SOURCE=rpiCamera bluenviron/mediamtx:latest-rpi
+#sleep 10
+
+/usr/bin/docker compose -f /home/krytn/krytn_ws/.devcontainer/docker-compose-bringup.yaml up

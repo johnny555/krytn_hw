@@ -22,6 +22,7 @@
   <depend>rosbridge_suite</depend>
   <depend>camera_ros</depend>
   <depend>rviz2</depend>
+  <depend>image_publisher</depend>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
