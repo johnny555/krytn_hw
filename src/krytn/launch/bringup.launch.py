@@ -118,11 +118,11 @@ def generate_launch_description():
         )
 
     camera_node = Node(
-        package='image_publisher',
-        executable='image_publisher_node',
+        package='camera_ros',
+        executable='camera_node',
         name='camera_node',
         output='screen',
-        arguments=['rtsp://localhost:8553/cam']
+        parameters=[('frame_id', 'camera_link')]
     )
 
     return LaunchDescription([
