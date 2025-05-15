@@ -5,7 +5,7 @@ services:
     #  context: .
     #  dockerfile: Dockerfile
     image: ros2
-    user: ubuntu
+    user: root
     group_add:
       - dialout
       - tty
@@ -55,6 +55,4 @@ services:
       - /dev/video22:/dev/video22
       - /dev/video23:/dev/video23
       - /dev/video31:/dev/video31
-
-      
-    command: /bin/sh -c "while sleep 1000; do :; done"
+    command: /bin/bash /bringup.sh

@@ -23,6 +23,7 @@
   <depend>camera_ros</depend>
   <depend>rviz2</depend>
   <depend>image_publisher</depend>
+  <depend>image_transport_plugins</depend>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

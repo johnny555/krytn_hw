@@ -122,7 +122,9 @@ def generate_launch_description():
         executable='camera_node',
         name='camera_node',
         output='screen',
-        parameters=[('frame_id', 'camera_link')]
+        parameters=[('frame_id', 'camera_link'),
+        ('camera_info_url', 
+            'file://'+join(get_package_share_directory('krytn'), 'config', 'camera_info.yaml'))]
     )
 
     return LaunchDescription([
