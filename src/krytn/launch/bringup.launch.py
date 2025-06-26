@@ -117,15 +117,33 @@ def generate_launch_description():
             output='screen'
         )
 
-    camera_node = Node(
-        package='camera_ros',
-        executable='camera_node',
-        name='camera_node',
-        output='screen',
-        parameters=[('frame_id', 'camera_link'),
-        ('camera_info_url', 
-            'file://'+join(get_package_share_directory('krytn'), 'config', 'camera_info.yaml'))]
+    camera =  IncludeLaunchDescription(
+            PythonLaunchDescriptionSource( 
+                    join(get_package_share_directory('krytn'), 
+                          'launch','camera.launch.py'))
     )
+
+    aruco = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource( 
+                    join(get_package_share_directory('aruco_detect'), 
+                          'launch','aruco_detect.launch.py'))
+    )
+
+    f_slam = Node(
+            package='fiducial_slam_ros2',
+            executable='f_slam',
+            name='f_slam',
+            output='screen',
+        parameters=[{
+            'map_frame': 'map',
+            'odom_frame': 'odom',
+            'base_frame': 'base_footprint',
+            'camera_frame': 'realsense_link',
+            'mapping_mode': True,  # Set to False for localization mode
+            'fiducial_map_file': 'fiducial_map.txt',
+            'optimization_frequency': 2.0,
+            'use_sim_time': False
+        }])
 
     return LaunchDescription([
         description_launch,
@@ -136,7 +154,9 @@ def generate_launch_description():
         joy_node,  # Add the joystick node
         twist_stamper,
         teleop_node,  # Add the teleop node
-        camera_node,  # Add the camera node
-        slam_toolbox,
-        oled
+        #camera,  # Add the camera node
+        #slam_toolbox, # Using fiducial slam instead of lidar slam. 
+        oled,
+        #aruco,
+        #f_slam
     ])

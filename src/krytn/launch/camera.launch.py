@@ -35,9 +35,9 @@ def generate_launch_description():
             'camera_info_url': camera_info_url
         }]
         ,
-        remappings=[
-            ( '/camera_node/image_raw/compressed', '/camera/image_raw/compressed')
-        ]
+        #remappings=[
+        #    ( '/camera_node/image_raw/compressed', '/camera/image_raw/compressed')
+        #]
     )
 
 
