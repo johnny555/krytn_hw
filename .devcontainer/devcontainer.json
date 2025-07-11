@@ -4,5 +4,5 @@
         "docker-compose.yaml"
     ],
     "service": "ros2",
-    "workspaceFolder": "/workspace/",
+    "workspaceFolder": "/workspace/"
 }

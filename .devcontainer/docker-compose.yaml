@@ -33,28 +33,8 @@ services:
       - /dev/i2c-1:/dev/i2c-1
       - /dev/i2c-0:/dev/i2c-0
       - /dev/input/:/dev/input/
-      - /dev/media0:/dev/media0
-      - /dev/media1:/dev/media1
-      - /dev/media2:/dev/media2
-      - /dev/media3:/dev/media3
-      - /dev/media4:/dev/media4
+   
 
-      - /dev/v4l-subdev0:/dev/v4l-subdev0
-      - /dev/video0:/dev/video0
-      - /dev/video10:/dev/video10
-      - /dev/video11:/dev/video11
-      - /dev/video12:/dev/video12
-      - /dev/video13:/dev/video13
-      - /dev/video14:/dev/video14
-      - /dev/video15:/dev/video15
-      - /dev/video16:/dev/video16
-      - /dev/video18:/dev/video18
-      - /dev/video19:/dev/video19
-      - /dev/video20:/dev/video20
-      - /dev/video21:/dev/video21
-      - /dev/video22:/dev/video22
-      - /dev/video23:/dev/video23
-      - /dev/video31:/dev/video31
 
       
     command: /bin/sh -c "while sleep 1000; do :; done"
