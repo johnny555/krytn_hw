@@ -10,6 +10,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 # Generate messages
@@ -24,13 +25,15 @@ include_directories(include)
 # Create the C++ node executable
 add_executable(oled_display_node_exec src/oled_display_node.cpp) # Renamed target
 ament_target_dependencies(oled_display_node_exec # Renamed target
-  rclcpp 
+  rclcpp
   std_msgs
+  sensor_msgs
 )
 
 # Link against the generated message interfaces
 rosidl_target_interfaces(oled_display_node_exec # Renamed target
   ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
 
 # Install C++ executables
 install(TARGETS

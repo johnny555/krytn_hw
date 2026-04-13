@@ -14,6 +14,16 @@
     <origin xyz="0 0 0.15" rpy="0 0 0" />
   </xacro:lidar_2d>
 
+  <link name="camera" />
+
+  <joint name="camera_joint">
+
+    <parent name="base_link" />
+    <child name="camera" />
+    
+    <origin xyz="-0.05 0.05 0.8" rpy="0 0 ${pi/2}" />
+  </joint>
+
 
 <!-- ROS 2 Control block -->
   <ros2_control name="ubiquity_motor_ros2/MotorHardware" type="system">

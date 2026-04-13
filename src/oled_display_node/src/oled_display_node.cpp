@@ -1,5 +1,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "oled_display_node/msg/display_output.hpp"
+#include "sensor_msgs/msg/battery_state.hpp"
 #include <memory>
 #include <string>
 #include <chrono>
@@ -122,10 +123,9 @@ public:
         display_subscription_ = this->create_subscription<oled_display_node::msg::DisplayOutput>(
             "display_output", 10, std::bind(&OledDisplayNode::display_callback, this, _1));
 
-        // TODO: Add subscribers for battery_state, motor_power_active, firmware_version if needed
-        // battery_subscription_ = this->create_subscription<sensor_msgs::msg::BatteryState>(...)
-        // motor_power_subscription_ = this->create_subscription<std_msgs::msg::Bool>(...)
-        // firmware_subscription_ = this->create_subscription<std_msgs::msg::String>(...)
+        // Subscribe to battery state
+        battery_subscription_ = this->create_subscription<sensor_msgs::msg::BatteryState>(
+            "battery_state", 10, std::bind(&OledDisplayNode::battery_callback, this, _1));
 
         // Create a timer for periodic status updates
         if (update_rate_hz > 0 && display_initialized_) {
@@ -138,6 +138,16 @@ public:
     }
 
 private:
+    void battery_callback(const sensor_msgs::msg::BatteryState::SharedPtr msg)
+    {
+        battery_voltage_ = msg->voltage;
+        battery_percentage_ = msg->percentage;
+        battery_received_ = true;
+
+        RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 60000,
+            "Battery update: %.1fV  %.0f%%", battery_voltage_, battery_percentage_);
+    }
+
     void display_callback(const oled_display_node::msg::DisplayOutput::SharedPtr msg)
     {
         if (!display_initialized_) {
@@ -210,17 +220,15 @@ private:
         dispOled_writeText(this->get_logger(), &oled_ctx_, DISP_LINE_IP_ETH, 0, DISP_WRITE_TEXT_LEFT, eth_addr.c_str());
         this->sleep_for(std::chrono::duration<double>(update_delay_s_));
 
-        // TODO: Update Battery and Motor/FW status lines if those subscribers are added
-        // Example:
-        // std::stringstream battStream;
-        // battStream << "Bat:" << std::fixed << std::setprecision(1) << g_batteryVoltage << "V" << g_batteryPercentage;
-        // dispOled_writeText(this->get_logger(), &oled_ctx_, DISP_LINE_BATT_VOLTS, 0, DISP_WRITE_TEXT_LEFT, battStream.str().c_str());
-        // this->sleep_for(std::chrono::duration<double>(update_delay_s_));
-
-        // std::stringstream infoStream;
-        // infoStream << "Mot:" << g_motorPowerActive << " FW:" << g_firmwareVersion;
-        // dispOled_writeText(this->get_logger(), &oled_ctx_, DISP_LINE_MOTOR_POWER, 0, DISP_WRITE_TEXT_LEFT, infoStream.str().c_str());
-        // this->sleep_for(std::chrono::duration<double>(update_delay_s_));
+        // Update battery status line
+        if (battery_received_) {
+            std::stringstream battStream;
+            battStream << "Bat:" << std::fixed << std::setprecision(1)
+                       << battery_voltage_ << "V "
+                       << std::setprecision(0) << (battery_percentage_ * 100.0) << "%";
+            dispOled_writeText(this->get_logger(), &oled_ctx_, DISP_LINE_BATT_VOLTS, 0, DISP_WRITE_TEXT_LEFT, battStream.str().c_str());
+            this->sleep_for(std::chrono::duration<double>(update_delay_s_));
+        }
     }
 
     // Helper to sleep without busy-waiting
@@ -229,19 +237,18 @@ private:
     }
 
     rclcpp::Subscription<oled_display_node::msg::DisplayOutput>::SharedPtr display_subscription_;
-    // Add other subscriptions here (battery, motor, firmware)
+    rclcpp::Subscription<sensor_msgs::msg::BatteryState>::SharedPtr battery_subscription_;
     rclcpp::TimerBase::SharedPtr timer_;
     std::string i2c_device_;
-    dispCtx_t oled_ctx_; // OLED Display context
+    dispCtx_t oled_ctx_;
     bool display_initialized_;
     double init_delay_s_;
     double update_delay_s_;
 
-    // TODO: Add member variables for battery state, motor power, firmware version
-    // double g_batteryVoltage = 0.0;
-    // std::string g_batteryPercentage = "    ";
-    // std::string g_motorPowerActive = "OFF";
-    // std::string g_firmwareVersion = "---";
+    // Battery state
+    double battery_voltage_ = 0.0;
+    double battery_percentage_ = 0.0;
+    bool battery_received_ = false;
 };
 
 // --- Main Function ---

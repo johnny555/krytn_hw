@@ -146,7 +146,7 @@ def generate_launch_description():
         }])
 
     return LaunchDescription([
-        description_launch,
+        #description_launch,
         sllidar_launch,
         serial_config,
         controller_manager,

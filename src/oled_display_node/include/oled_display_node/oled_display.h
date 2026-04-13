@@ -116,7 +116,7 @@ typedef struct {
 #define DISP_LINE_HOSTNAME       0  // Line number for hostname
 #define DISP_LINE_IP_WLAN        1  // Line number for WLAN IP
 #define DISP_LINE_IP_ETH         2  // Line number for Ethernet IP
-// Add other DISP_LINE_* definitions as needed (e.g., BATT_VOLTS, MOTOR_POWER)
+#define DISP_LINE_BATT_VOLTS     3  // Line number for battery voltage/percentage
 
 #define DISP_WRITE_TEXT_LEFT     0  // Text alignment: Left
 #define DISP_WRITE_TEXT_CENTER   1  // Text alignment: Center (Added for completeness)
